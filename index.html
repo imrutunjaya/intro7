@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr.Researcher</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <style>
+        body {
+            background-color: black; /* Set background color to black */
+            color: white; /* Set default text color to white */
+        }
+        .connection-card {
+            background-color: transparent; /* Make connection cards transparent */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Light border for visibility */
+        }
+        .error-message {
+            background: rgba(15, 15, 15, 0.8); /* Match background for error message */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="text-center mb-6" id="content">
+            <h1 class="text-4xl sm:text-5xl font-thin tracking-tighter mb-2" id="title">Dr.Researcher</h1>
+            <p class="text-sm text-gray-400 tracking-wider" id="booting-text" style="display: none;">Booting system...</p>
+            <p class="text-xs text-gray-500 mt-1" id="booting-subtext" style="display: none;">Loading core components</p>
+        </div>
+        
+        <div class="space-y-6">
+            <!-- Loading Animation -->
+            <div class="connection-card" id="loading-card">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <div class="animate-spin">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 6v3m4 7h3m-7 4v-3m-4-7H6" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div id="init-status">
+                            <p class="text-gray-400" id="init-text">Booting system...</p>
+                            <p class="text-xs text-gray-500 mt-1" id="init-subtext">Loading core components</p>
+                        </div>
+                    </div>
+                    <div id="loading-status" class="text-xs text-gray-500"></div>
+                </div>
+                <div class="mt-3 pt-3 border-t border-gray-800">
+                    <p class="text-xs text-gray-400 mb-1">System Status</p>
+                    <div id="init-messages" class="space-y-2 text-sm">
+                        <div class="flex items-center" id="search-status">
+                            <span>Searching database...</span>
+                        </div>
+                        <div class="flex items-center" id="connect-status">
+                            <span>Establishing connection...</span>
+                        </div>
+                        <div class="flex items-center" id="auth-status">
+                            <span>Authenticating credentials...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Secure Connection Check -->
+            <div class="connection-card" id="secure-connection-card">
+                <div class="mb-6">
+                    <h3 class="text-xl font-light mb-1 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                        Secure Connection Status
+                    </h3>
+                    <p class="text-gray-400 text-sm font-light">Establishing encrypted connections...</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center py-3 border-b border-gray-800">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                        <div>
+                            <div class="flex items-center mb-1">
+                                <span id="https-status-text" class="font-light">Establishing TLS 1.3 Encryption...</span>
+                            </div>
+                            <p class="text-xs text-gray-400">Encryption protocol</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-900 rounded-lg p-4 flex items-center">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                        </svg>
+                        <div>
+                            <div class="flex items-center mb-1">
+                                <span id="db-status-text" class="font-light">Validating Database Schema...</span>
+                            </div>
+                            <p class="text-xs text-gray-400">Connection stability</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Connection Status -->
+            <div class="connection-card" id="connection-status-card">
+                <div class="mb-4">
+                    <p class="text-xs text-gray-400 mb-1">Network Status</p>
+                    <div id="network-status">
+                        <span id="status-text">Checking connection...</span>
+                    </div>
+                </div>
+                <div class="flex items-center mb-4">
+                    <div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center mr-3">
+                        <i class="fas fa-plug text-lg text-blue-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-light">Connection Status</h3>
+                        <p class="text-gray-400 text-sm font-light">Real-time network monitoring</p>
+                    </div>
+                </div>
+                
+                <div class="error-message" id="error-message">
+                    <div class="flex items-center justify-center">
+                        <i class="fas fa-exclamation-triangle warning-icon"></i>
+                        <p class="text-sm">
+                            <span id="error-text">Oops! It seems you're offline.</span>
+                            <br>
+                            <span class="text-xs">Please check your internet connection.</span>
+                        </p>
+                    </div>
+                    <button id="retry-btn" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none">
+                        Retry
+                    </button>
+                </div>
+
+                <div class="mt-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <span id="connection-status" class="flex items-center font-medium">
+                            <span id="status-text">Checking connection...</span>
+                        </span>
+                        <span id="connection-percent" class="text-white">0%</span> <!-- Original percentage display -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-8 text-center text-xs text-gray-500">
+            <p> Dr.Researcher™ # Mrutunjaya Pradhan.</p>
+        </div>
+    </div>
+
+    <script>
+        // Service Worker registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('Service Worker registration failed:', error);
+                    });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize system sequence
+            const initSteps = [
+                { text: "Booting system...", subtext: "Loading core components", delay: 1000 },
+                { text: "Searching database...", subtext: "", delay: 800 },
+                { text: "Establishing connection...", subtext: "", delay: 800 },
+                { text: "Authenticating credentials...", subtext: "", delay: 800 },
+                { text: "System ready", subtext: "Establishing connections", delay: 700 }
+            ];
+            
+            let currentInitStep = 0;
+            function runInitStep() {
+                if (currentInitStep < initSteps.length) {
+                    const step = initSteps[currentInitStep];
+                    if (currentInitStep === 0) {
+                        document.getElementById('booting-text').style.display = 'block';
+                        document.getElementById('booting-subtext').style.display = 'block';
+                    } else {
+                        const statusText = document.getElementById('init-text');
+                        const statusSubtext = document.getElementById('init-subtext');
+                        statusText.textContent = step.text;
+                        statusSubtext.textContent = step.subtext;
+                        document.getElementById('loading-card').classList.add('visible');
+                    }
+                    currentInitStep++;
+                    setTimeout(runInitStep, step.delay);
+                } else {
+                    checkHTTPS();
+                    document.getElementById('secure-connection-card').classList.add('visible');
+                    setTimeout(() => {
+                        document.getElementById('connection-status-card').classList.add('visible');
+                    }, 500); // Delay for the connection status card to appear
+                }
+            }
+            
+            setTimeout(runInitStep, 500);
+            
+            // Simulate database connection check with delay
+            setTimeout(checkDatabase, 1500);
+            
+            // Initialize connection status
+            checkConnection();
+            
+            // Add retry button event listener
+            document.getElementById('retry-btn').addEventListener('click', function() {
+                resetConnection();
+                checkConnection();
+            });
+            
+            // Start system status animation
+            simulateSystemHealth();
+            
+            // Simulate connection progress
+            simulateConnectionProgress();
+            
+            // Add online/offline event listeners
+            window.addEventListener('online', function() {
+                checkConnection();
+            });
+            
+            window.addEventListener('offline', function() {
+                checkConnection();
+            });
+        });
+        
+        function checkHTTPS() {
+            setTimeout(function() {
+                const httpsText = document.getElementById('https-status-text');
+                
+                if (window.location.protocol === 'https:') {
+                    httpsText.textContent = 'HTTPS Secure';
+                } else {
+                    httpsText.textContent = 'HTTP Not Secure';
+                }
+            }, 1000);
+        }
+        
+        function checkDatabase() {
+            const dbText = document.getElementById('db-status-text');
+            
+            // Simulating random success (90% chance)
+            const isSuccess = Math.random() > 0.1;
+            
+            setTimeout(function() {
+                if (isSuccess) {
+                    dbText.textContent = 'Database Connected';
+                } else {
+                    dbText.textContent = 'Connection Failed';
+                }
+            }, 1000);
+        }
+        
+        function checkConnection() {
+            const statusText = document.getElementById('status-text');
+            const errorBox = document.getElementById('error-message');
+            
+            if (navigator.onLine) {
+                statusText.textContent = 'Online';
+                errorBox.style.display = 'none'; // Hide error message
+            } else {
+                statusText.textContent = 'Offline';
+                document.getElementById('error-text').textContent = 'Oops! It seems you\'re offline.';
+                errorBox.style.display = 'block'; // Show error message
+            }
+        }
+        
+        function simulateSystemHealth() {
+            const steps = [
+                { element: 'search-status', text: 'Database located', delay: 800 },
+                { element: 'connect-status', text: 'Connection established', delay: 1200 },
+                { element: 'auth-status', text: 'Authentication successful', delay: 1500 }
+            ];
+
+            steps.forEach((step, index) => {
+                setTimeout(() => {
+                    const element = document.getElementById(step.element);
+                    element.querySelector('span:last-child').textContent = step.text;
+                    
+                    if (index === steps.length - 1) {
+                        document.getElementById('init-text').textContent = "System fully operational";
+                    }
+                }, step.delay);
+            });
+        }
+
+        function simulateConnectionProgress() {
+            const percentText = document.getElementById('connection-percent');
+            const progressValues = [7, 10, 22, 32, 45, 47, 50, 57, 69, 70, 78, 80, 88, 90, 92, 95, 100];
+            let index = 0;
+
+            const interval = setInterval(() => {
+                if (index < progressValues.length) {
+                    percentText.textContent = progressValues[index] + '%'; // Update the original percentage display
+                    index++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 300); // Update every 300ms for faster progress
+        }
+
+        function resetConnection() {
+            const statusText = document.getElementById('status-text');
+            statusText.textContent = 'Checking connection...';
+            document.getElementById('connection-percent').textContent = '0%'; // Reset the original percentage display
+        }
+    </script>
+</body>
+</html>
